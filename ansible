@@ -1,0 +1,72 @@
+What is Ansible?
+
+Ansible is an automation and configuration management tool used in DevOps to automate server setup, application deployment, and system configuration.
+
+It works without installing agents on servers (agentless) and connects using SSH.
+
+🔧 Why DevOps Engineers Use Ansible
+
+Automate server configuration
+
+Install software automatically
+
+Deploy applications
+
+Manage multiple servers at the same time
+
+Reduce manual work
+
+
+🧠 Simple Example
+
+Instead of logging into 10 servers and installing Docker manually:
+
+Server1 → install docker
+Server2 → install docker
+Server3 → install docker
+
+With Ansible, you run one command and it installs Docker on all servers automatically.
+
+=================================================================================================
+
+# Install Ansible
+sudo dnf install ansible -y
+
+# Verify installation
+ansible --version
+
+# Create project folder
+mkdir ansible-project
+cd ansible-project
+
+# Create inventory file
+cat <<EOF > inventory
+[webservers]
+localhost ansible_connection=local
+EOF
+
+# Create Ansible playbook
+cat <<EOF > install-docker.yml
+---
+- name: Install Docker using Ansible
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install Docker package
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+EOF
+
+# Run Ansible playbook
+ansible-playbook -i inventory install-docker.yml
+
+# Check Docker installation
+docker --version
